@@ -1,13 +1,15 @@
 ---
 ---
 
-<div class="orbs-container" aria-hidden="true">
-  <!-- Premium design grid canvas overlay -->
-  <div class="grid-overlay"></div>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-  <div class="orb orb-4"></div>
+<div class="orbs-container" id="interactive-container" aria-hidden="true">
+  <!-- Faint base grid visible everywhere -->
+  <div class="grid-base"></div>
+  
+  <!-- Subtle cursor glow that follows mouse -->
+  <div class="spotlight-glow"></div>
+  
+  <!-- Highlighted spotlight grid that lights up around the cursor -->
+  <div class="grid-spotlight"></div>
 </div>
 
 <style>
@@ -22,109 +24,116 @@
     overflow: hidden;
   }
 
-  /* Subtly illuminated neon design grid */
-  .grid-overlay {
+  /* Static faint base grid */
+  .grid-base {
     position: absolute;
     inset: 0;
     background-image: 
-      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
     background-size: 44px 44px;
     background-position: center center;
-    -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 20%, transparent 85%);
-    mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 20%, transparent 85%);
+    opacity: 1;
     z-index: 0;
     pointer-events: none;
   }
 
-  .orb {
+  /* Faint accent cursor spotlight glow */
+  .spotlight-glow {
     position: absolute;
-    border-radius: 50%;
-    opacity: 0.3;
-    will-change: transform;
+    inset: 0;
+    background-image: radial-gradient(
+      circle 220px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(208, 255, 0, 0.04) 0%,
+      transparent 100%
+    );
     z-index: 1;
+    pointer-events: none;
+    will-change: background-image;
   }
 
-  .orb-1 {
-    width: min(500px, 80vw);
-    height: min(500px, 80vw);
-    top: -10%;
-    left: -5%;
-    background: radial-gradient(circle, rgba(208, 255, 0, 0.22) 0%, transparent 70%);
-    animation: orbFloat1 22s ease-in-out infinite alternate;
-  }
-
-  .orb-2 {
-    width: min(400px, 70vw);
-    height: min(400px, 70vw);
-    top: 40%;
-    right: -8%;
-    background: radial-gradient(circle, rgba(208, 255, 0, 0.16) 0%, transparent 70%);
-    animation: orbFloat2 28s ease-in-out infinite alternate;
-  }
-
-  .orb-3 {
-    width: min(350px, 60vw);
-    height: min(350px, 60vw);
-    bottom: 5%;
-    left: 15%;
-    background: radial-gradient(circle, rgba(208, 255, 0, 0.14) 0%, transparent 70%);
-    animation: orbFloat3 20s ease-in-out infinite alternate;
-  }
-
-  .orb-4 {
-    width: min(300px, 50vw);
-    height: min(300px, 50vw);
-    bottom: 30%;
-    right: 15%;
-    background: radial-gradient(circle, rgba(208, 255, 0, 0.11) 0%, transparent 70%);
-    animation: orbFloat4 24s ease-in-out infinite alternate;
-  }
-
-  @keyframes orbFloat1 {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(60px, 80px) scale(1.1); }
-  }
-
-  @keyframes orbFloat2 {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(-50px, 60px) scale(1.15); }
-  }
-
-  @keyframes orbFloat3 {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(70px, -45px) scale(1.08); }
-  }
-
-  @keyframes orbFloat4 {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(-30px, -70px) scale(1.12); }
-  }
-
-  /* Light theme styling adapters */
-  :global(html[data-theme="light"]) .grid-overlay {
+  /* Highlighted spotlight grid */
+  .grid-spotlight {
+    position: absolute;
+    inset: 0;
     background-image: 
-      linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+      linear-gradient(rgba(208, 255, 0, 0.16) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(208, 255, 0, 0.16) 1px, transparent 1px);
+    background-size: 44px 44px;
+    background-position: center center;
+    z-index: 2;
+    pointer-events: none;
+    will-change: mask-image, -webkit-mask-image;
+    
+    /* Radial mask centered on mouse cursor */
+    -webkit-mask-image: radial-gradient(
+      circle 200px at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+      rgba(0, 0, 0, 1) 0%, 
+      rgba(0, 0, 0, 0.15) 60%, 
+      transparent 100%
+    );
+    mask-image: radial-gradient(
+      circle 200px at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+      rgba(0, 0, 0, 1) 0%, 
+      rgba(0, 0, 0, 0.15) 60%, 
+      transparent 100%
+    );
   }
 
-  :global(html[data-theme="light"]) .orb {
-    opacity: 0.18;
+  /* Light theme adaptation */
+  :global(html[data-theme="light"]) .grid-base {
+    background-image: 
+      linear-gradient(rgba(0, 0, 0, 0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.015) 1px, transparent 1px);
   }
 
-  :global(html[data-theme="light"]) .orb-1 {
-    background: radial-gradient(circle, rgba(82, 163, 0, 0.18) 0%, transparent 70%);
+  :global(html[data-theme="light"]) .spotlight-glow {
+    background-image: radial-gradient(
+      circle 220px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(82, 163, 0, 0.03) 0%,
+      transparent 100%
+    );
   }
 
-  :global(html[data-theme="light"]) .orb-2 {
-    background: radial-gradient(circle, rgba(82, 163, 0, 0.14) 0%, transparent 70%);
-  }
-
-  :global(html[data-theme="light"]) .orb-3 {
-    background: radial-gradient(circle, rgba(82, 163, 0, 0.11) 0%, transparent 70%);
-  }
-
-  :global(html[data-theme="light"]) .orb-4 {
-    background: radial-gradient(circle, rgba(82, 163, 0, 0.08) 0%, transparent 70%);
+  :global(html[data-theme="light"]) .grid-spotlight {
+    background-image: 
+      linear-gradient(rgba(82, 163, 0, 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(82, 163, 0, 0.12) 1px, transparent 1px);
   }
 </style>
+
+<script>
+  function setupInteractiveGrid() {
+    const container = document.getElementById('interactive-container');
+    if (!container) return;
+
+    // Centered default coordinate fallback for mobile/load
+    container.style.setProperty('--mouse-x', '50%');
+    container.style.setProperty('--mouse-y', '50%');
+
+    const updateCoordinates = (x: number, y: number) => {
+      // GPU-friendly custom properties update on the shared parent container
+      container.style.setProperty('--mouse-x', `${x}px`);
+      container.style.setProperty('--mouse-y', `${y}px`);
+    };
+
+    // Mouse tracking
+    window.addEventListener('mousemove', (e) => {
+      updateCoordinates(e.clientX, e.clientY);
+    });
+
+    // Touch tracking (mobile)
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 0) {
+        updateCoordinates(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
+  }
+
+  // Set up on load
+  setupInteractiveGrid();
+
+  // Support Astro View Transitions after-swap lifecycle
+  document.addEventListener('astro:after-swap', setupInteractiveGrid);
+</script>
+
