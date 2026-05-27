@@ -1,0 +1,255 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  href: string;
+  title: string;
+  subtitle?: string;
+  icon?: string;
+  isHot?: boolean;
+}
+
+const { href, title, subtitle, icon, isHot = false } = Astro.props;
+---
+
+<a href={href} class="link-btn" target="_blank" rel="noopener noreferrer">
+  <!-- Glowing border that spins on hover -->
+  <div class="link-border" aria-hidden="true"></div>
+  
+  <div class="link-inner">
+    {icon && (
+      <div class="link-icon-wrapper">
+        <Icon name={icon} class="link-icon" />
+      </div>
+    )}
+    
+    <div class="link-text">
+      <span class="link-title">{title}</span>
+      {subtitle && <span class="link-subtitle">{subtitle}</span>}
+    </div>
+
+    <div class="link-meta">
+      {isHot && (
+        <span class="hot-badge animate-pulse">HOT</span>
+      )}
+      <div class="link-arrow">
+        <Icon name="arrow-up-right" class="arrow-icon" />
+      </div>
+    </div>
+  </div>
+</a>
+
+<style>
+  .link-btn {
+    position: relative;
+    display: flex;
+    text-decoration: none;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    transition: 
+      border-color 0.3s ease, 
+      transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    overflow: hidden;
+    color: var(--text-primary);
+    width: 100%;
+  }
+
+  .link-btn:hover {
+    border-color: transparent;
+    transform: translateY(-3px);
+  }
+
+  .link-btn:active {
+    transform: translateY(-1px);
+  }
+
+  /* Conic animated border overlay */
+  .link-border {
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    padding: 1.5px;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .link-border::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    aspect-ratio: 1;
+    background: conic-gradient(
+      from 0deg,
+      transparent 55%,
+      rgba(var(--accent-rgb), 0.15) 70%,
+      var(--accent-color) 88%,
+      transparent 100%
+    );
+    transform: translate(-50%, -50%) rotate(0deg);
+    animation: spin 3.5s linear infinite;
+    animation-play-state: paused;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .link-btn:hover .link-border::before {
+    opacity: 1;
+    animation-play-state: running;
+  }
+
+  /* Inner elements structure */
+  .link-inner {
+    position: relative;
+    margin: 1.5px;
+    width: calc(100% - 3px);
+    border-radius: 14.5px;
+    background: var(--bg-card);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 1;
+    transition: background 0.3s ease;
+  }
+
+  .link-btn:hover .link-inner {
+    background: rgba(0, 0, 0, 0.25);
+  }
+
+  :global(html[data-theme="light"]) .link-inner {
+    background: rgba(255, 255, 255, 0.7);
+  }
+  
+  :global(html[data-theme="light"]) .link-btn:hover .link-inner {
+    background: rgba(255, 255, 255, 0.85);
+  }
+
+  /* Icon wrapper styling */
+  .link-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(var(--accent-rgb), 0.08);
+    border: 1px solid rgba(var(--accent-rgb), 0.15);
+    color: var(--accent-color);
+    transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .link-btn:hover .link-icon-wrapper {
+    transform: scale(1.08) rotate(-4deg);
+    background: rgba(var(--accent-rgb), 0.15);
+    border-color: rgba(var(--accent-rgb), 0.35);
+  }
+
+  .link-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* Text details */
+  .link-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-grow: 1;
+    gap: 2px;
+  }
+
+  .link-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+    transition: color 0.3s ease;
+  }
+
+  .link-btn:hover .link-title {
+    color: var(--accent-color);
+  }
+
+  .link-subtitle {
+    font-size: 0.82rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    text-align: left;
+    line-height: 1.3;
+  }
+
+  /* Arrow & Badges Meta wrapper */
+  .link-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* Hot Badge styling */
+  .hot-badge {
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #000;
+    background: var(--accent-color);
+    padding: 3px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.05em;
+    box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.4);
+  }
+
+  .link-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition: color 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .link-btn:hover .link-arrow {
+    color: var(--accent-color);
+    transform: scale(1.15) translate(1px, -1px);
+  }
+
+  .arrow-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  @keyframes spin {
+    0%   { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  /* Responsive tweaks */
+  @media (max-width: 480px) {
+    .link-inner {
+      padding: 14px 16px;
+      gap: 12px;
+    }
+    .link-icon-wrapper {
+      width: 38px;
+      height: 38px;
+    }
+    .link-icon {
+      width: 18px;
+      height: 18px;
+    }
+    .link-title {
+      font-size: 0.95rem;
+    }
+    .link-subtitle {
+      font-size: 0.78rem;
+    }
+  }
+</style>

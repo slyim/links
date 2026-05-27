@@ -1,0 +1,345 @@
+---
+import '../styles/main.css';
+import BackgroundOrbs from '../components/BackgroundOrbs.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import GlassCard from '../components/GlassCard.astro';
+import Icon from '../components/Icon.astro';
+
+const title = "Privacy Policy — Lila";
+const description = "Privacy Policy and data practices for the digital space of Lila.";
+---
+
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    
+    <!-- Theme Script -->
+    <script is:inline>
+      (() => {
+        const saved = localStorage.getItem('theme');
+        if (saved) {
+          document.documentElement.setAttribute('data-theme', saved);
+        } else {
+          const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+          document.documentElement.setAttribute('data-theme', prefersLight ? 'light' : 'dark');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <!-- Skip to content for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to Content</a>
+
+    <!-- Animated Neon Blobs Background -->
+    <BackgroundOrbs />
+
+    <!-- Theme Switcher -->
+    <ThemeToggle />
+
+    <!-- Main Viewport Center -->
+    <main id="main-content" class="container">
+      <div class="inner-layout stagger-children">
+        
+        <!-- Back to Home Link (using the exact cool moving border hover glow) -->
+        <a href={import.meta.env.BASE_URL} class="back-home-btn animate-fade-in-scale">
+          <div class="link-border" aria-hidden="true"></div>
+          <div class="link-inner">
+            <Icon name="arrow-up-right" class="back-icon" />
+            <span class="back-text">BACK TO HOMEPAGE</span>
+          </div>
+        </a>
+
+        <!-- Content Card -->
+        <div class="animate-fade-in-up delay-100">
+          <GlassCard>
+            <div class="legal-content">
+              <h1 class="legal-title">Privacy Policy</h1>
+              <p class="legal-date">LAST UPDATED: MAY 27, 2026</p>
+              
+              <div class="legal-divider" aria-hidden="true"></div>
+              
+              <p class="legal-intro">
+                Your privacy is of utmost importance to Lila. This Privacy Policy details how we handle information in connection with this minimal web showcase.
+              </p>
+
+              <section class="legal-section">
+                <h2>1. Information We Collect</h2>
+                <p>
+                  This website is designed as a direct link list and digital showcase. We do not run databases, tracking cookies, user accounts, or active telemetry. You can browse all link nodes anonymously.
+                </p>
+              </section>
+
+              <section class="legal-section">
+                <h2>2. External Links</h2>
+                <p>
+                  This space contains outward links to other platforms (including GitHub, Instagram, and Spotify). We hold no oversight or liability for the data models, cookie policies, or privacy protocols implemented by these external domains.
+                </p>
+              </section>
+
+              <section class="legal-section">
+                <h2>3. Local Storage</h2>
+                <p>
+                  We utilize standard browser `localStorage` solely to store and persist your preferred visual theme setting (Dark or Light Mode). This data is completely local to your browser and is never uploaded or transmitted off-device.
+                </p>
+              </section>
+
+              <section class="legal-section">
+                <h2>4. Updates to This Policy</h2>
+                <p>
+                  This document may be revised periodically. Any updates will be reflected directly on this page with an updated modification date.
+                </p>
+              </section>
+            </div>
+          </GlassCard>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer animate-fade-in-scale">
+          <div class="footer-divider" aria-hidden="true"></div>
+          <p class="footer-credit">
+            © {new Date().getFullYear()} Lila. All rights reserved.
+          </p>
+        </footer>
+
+      </div>
+    </main>
+  </body>
+</html>
+
+<style>
+  /* Base Container Grid styling */
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100dvh;
+    padding: 60px 20px 48px;
+    width: 100%;
+    position: relative;
+    z-index: 10;
+  }
+
+  .inner-layout {
+    width: 100%;
+    max-width: 580px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+
+  /* Back Home Button with Moving Border Hover Glow */
+  .back-home-btn {
+    position: relative;
+    display: flex;
+    text-decoration: none;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    transition: border-color 0.3s ease, transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    overflow: hidden;
+    color: var(--text-primary);
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .back-home-btn:hover {
+    border-color: transparent;
+    transform: translateY(-2px);
+  }
+
+  .link-border {
+    position: absolute;
+    inset: 0;
+    border-radius: 12px;
+    padding: 1.5px;
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .link-border::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    aspect-ratio: 1;
+    background: conic-gradient(
+      from 0deg,
+      transparent 55%,
+      rgba(var(--accent-rgb), 0.15) 70%,
+      var(--accent-color) 88%,
+      transparent 100%
+    );
+    transform: translate(-50%, -50%) rotate(0deg);
+    animation: spin 3.5s linear infinite;
+    animation-play-state: paused;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .back-home-btn:hover .link-border::before {
+    opacity: 1;
+    animation-play-state: running;
+  }
+
+  .link-inner {
+    position: relative;
+    margin: 1.5px;
+    width: calc(100% - 3px);
+    border-radius: 10.5px;
+    background: var(--bg-card);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 1;
+    transition: background 0.3s ease;
+  }
+
+  .back-home-btn:hover .link-inner {
+    background: rgba(0, 0, 0, 0.25);
+  }
+
+  :global(html[data-theme="light"]) .back-home-btn:hover .link-inner {
+    background: rgba(255, 255, 255, 0.85);
+  }
+
+  .back-icon {
+    width: 16px;
+    height: 16px;
+    transform: rotate(-135deg); /* Points back/left */
+    color: var(--accent-color);
+    transition: transform 0.3s ease;
+  }
+
+  .back-home-btn:hover .back-icon {
+    transform: rotate(-135deg) scale(1.1);
+  }
+
+  .back-text {
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-primary);
+  }
+
+  /* Legal content layout */
+  .legal-content {
+    padding: 32px 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .legal-title {
+    font-size: clamp(2rem, 5vw, 2.4rem);
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .legal-date {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--accent-color);
+    margin-bottom: 20px;
+  }
+
+  .legal-divider {
+    width: 100%;
+    height: 1px;
+    background: var(--border-color);
+    margin-bottom: 24px;
+  }
+
+  .legal-intro {
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    margin-bottom: 28px;
+  }
+
+  .legal-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+    width: 100%;
+  }
+
+  .legal-section h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+  }
+
+  .legal-section p {
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--text-muted);
+  }
+
+  /* Footer */
+  .footer {
+    width: 100%;
+    margin-top: 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .footer-divider {
+    width: 60px;
+    height: 1px;
+    background: var(--border-color);
+    margin-bottom: 8px;
+  }
+
+  .footer-credit {
+    font-size: 0.78rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+  }
+
+  @keyframes spin {
+    0%   { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  @media (max-width: 480px) {
+    .container {
+      padding: 72px 16px 36px;
+    }
+    .legal-content {
+      padding: 24px 20px;
+    }
+  }
+</style>
